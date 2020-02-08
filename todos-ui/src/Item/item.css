@@ -1,0 +1,39 @@
+.item-container {
+  background-color: rgba(48,116,167, 0.8);
+  padding: 2%;
+  color: #1c2129;
+  display: flex;
+  align-items: center;
+  padding-right: 10%;
+  margin: 3%;
+  width: 400px;
+}
+
+.item-container.high {
+  background-color: rgba(199,76,119, 0.8);
+  color: #1c2129;
+}
+
+.item-container.medium {
+  background-color: rgba(227,117,117, 0.8);
+}
+
+.item-container.low {
+  background-color: rgba(48,116,167, 0.8);
+}
+
+.item-row {
+  display: flex;
+  align-items: center;
+}
+
+.item-row.high {
+  color: rgba(199,76,119, 0.8);
+}
+
+.item-row.medium {
+  color: rgba(227,117,117, 0.8);
+}
+.item-row.low {
+  color: rgba(48,116,167, 0.8);
+}
