@@ -1,17 +1,29 @@
 .item-container {
   background-color: rgba(48,116,167, 0.8);
   padding: 2%;
-  color: #1c2129;
+  color: rgb(28, 33, 41);
   display: flex;
   align-items: center;
   padding-right: 10%;
   margin: 3%;
   width: 400px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
+.item-container:hover {
+  cursor: pointer;
+}
 .item-container.high {
   background-color: rgba(199,76,119, 0.8);
-  color: #1c2129;
+}
+
+.item-container.high:hover {
+  background-color: rgba(230, 88, 138, 0.8);
+  cursor: pointer;
+}
+
+.action-icon:hover {
+  cursor: pointer;
 }
 
 .item-container.medium {
@@ -31,9 +43,22 @@
   color: rgba(199,76,119, 0.8);
 }
 
+.item-row.high:hover {
+  color: rgba(199,76,119, 0.9);
+}
+
 .item-row.medium {
   color: rgba(227,117,117, 0.8);
 }
+
+.item-row.medium:hover {
+  color: rgba(227,117,117, 0.9);
+}
+
 .item-row.low {
   color: rgba(48,116,167, 0.8);
+}
+
+.item-row.low:hover {
+  color: rgba(48,116,167, 0.9);
 }

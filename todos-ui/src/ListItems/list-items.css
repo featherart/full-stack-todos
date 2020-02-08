@@ -6,12 +6,13 @@
   margin: 10%;
   padding: 5%;
   border: 1px solid rgba(48, 116, 167, 0.5);
+  background-color: rgba(48, 116, 167, 0.1);
 }
 
 .title {
   font-size: 2rem;
-  font-weight: 400;
-  color: rgba(0, 160, 238, 0.8);
+  font-weight: 600;
+  color: rgba(48, 116, 167, 1);
   text-transform: uppercase;
   display: flex;
   align-items: center;
@@ -19,15 +20,22 @@
 }
 
 .submit-button {
-  background-color: transparent;
+  background-color: rgba(199, 76, 119, 0.2);
   border: 1px solid rgba(221, 96, 178, 0.5);
   color: rgba(199, 76, 119, 0.8);
   margin-left: 20px;
-  height: 40px;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+}
+
+.plus-icon {
+  transform: translateY(2px);
 }
 
 .submit-button:hover {
   color: rgba(199, 76, 119, 0.8);
+  background-color: rgba(221, 96, 178, 0.3);
   cursor: pointer;
 }
 
@@ -36,14 +44,18 @@
   border: none;
   border-bottom: 1px solid rgba(0, 160, 238, 0.8);
   margin-right: 20px;
+  width: 200px;
+  height: 25px;
 }
 
 .form select {
   background-color: transparent;
   border: none;
-  border-bottom: 1px solid rgba(0, 160, 238, 0.8);
+  border: 1px solid rgba(0, 160, 238, 0.8);
   margin-right: 20px;
   color: rgba(0, 160, 238, 0.8);
+  font-size: .9rem;
+  height: 30px;
 }
 
 .form option {
@@ -52,14 +64,22 @@
 }
 
 .form input::placeholder {
-  color: rgba(0, 160, 238, 0.8);
+  color: rgba(0, 160, 238, 0.4);
   font-size: 1rem;
 }
 
-.form select:focus {
+.form select:focus, .form input:focus {
   border-color: transparent;
-  box-shadow: 0 0 1px 3px rgba(59, 153, 252, .7);
+  box-shadow: 0 0 1px 3px rgba(59, 153, 252, 0.7);
   box-shadow: 0 0 0 3px -moz-mac-focusring;
   color: rgba(0, 160, 238, 0.8);
+  outline: none;
+}
+
+.form button:focus {
+  border-color: transparent;
+  box-shadow: 0 0 1px 3px rgba(221, 96, 178, 0.7);
+  box-shadow: 0 0 0 3px -moz-mac-focusring;
+  color: rgba(221, 96, 178, 0.8);
   outline: none;
 }

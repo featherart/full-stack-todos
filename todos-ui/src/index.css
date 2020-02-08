@@ -3,12 +3,7 @@ body {
   font-family: 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #1c2129;
-}
-
-h2 {
-  color: rgb(221,96,178);
-  font-weight: 400;
+  background-color: rgb(28, 33, 41);;
 }
 
 content-container {
