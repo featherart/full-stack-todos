@@ -20,10 +20,10 @@ export const ListItems = () => {
               return <option value={priority.value}>{priority.label}</option>;
             })}
           </select>
-          <button className='submit-button' type='submit'><Plus /></button>
+          <button className='submit-button' type='submit'><Plus className='plus-icon' /></button>
         </form>
       </div>
-      <Item item={'yo milk'} priority={'high'} />
+      <Item item={'yo milk'} priority={'high'} complete={true} />
       <Item item={'yo milk'} priority={'medium'} />
       <Item item={'yo milk'} priority={'low'} />
     </div>
