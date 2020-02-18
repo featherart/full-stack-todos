@@ -1,0 +1,1 @@
+export const FETCH_ITEMS = 'http://localhost:4000/api/items'

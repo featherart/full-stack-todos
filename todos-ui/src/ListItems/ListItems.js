@@ -1,6 +1,7 @@
-import React, {useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Item } from '../Item';
 import { Plus } from 'react-feather';
+import { FETCH_ITEMS } from '../api';
 import './list-items.css';
 
 const priorities = [
@@ -32,23 +33,23 @@ const items = [
   }
 ];
 
-const sortedItems = items.sort((a, b) => a.priority - b.priority);
+const sortedItems = items.sort(
+  (a, b) => a.priority - b.priority
+);
 
 export const ListItems = () => {
-  const [items, setItems] = useState([])
-  const url = 'http://localhost:4000/api/items';
-  const options = { type: 'GET'};
+  const [ items, setItems ] = useState([]);
 
   useEffect(() => {
     const fetchItems = async () => {
-      const res = await fetch(url, options);
+      const res = await fetch(FETCH_ITEMS);
       const json = await res.json();
       setItems(json);
-    }
+    };
     fetchItems();
   }, []);
 
-  console.log('items', items)
+  console.log('items', items);
   return (
     <div className="list-items-container">
       <div className="title">Todos</div>
