@@ -12,6 +12,8 @@ const priorities = [
 
 export const ListItems = () => {
   const [ items, setItems ] = useState([]);
+  const [ description, setDescription ] = useState('');
+  const [ priority, setPriority ] = useState('');
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -22,13 +24,41 @@ export const ListItems = () => {
     fetchItems();
   }, []);
 
+  const handleSubmit = e => {
+    e.preventDefault();
+    const data = {
+      item: { description, priority, is_complete: false }
+    };
+
+    fetch(FETCH_ITEMS, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' }
+    })
+      .then(res => res.json())
+      .then(json => {
+        setDescription('');
+        return setItems([ ...items, json.data ]);
+      })
+      .catch(error => console.error(error));
+  };
+
   return (
     <div className="list-items-container">
       <div className="title">Todos</div>
       <div className="form">
-        <form>
-          <input type="text" placeholder="description" />
-          <select name="priority">
+        <form onSubmit={e => handleSubmit(e)}>
+          <input
+            autoFocus
+            type="text"
+            placeholder="description"
+            name="description"
+            onChange={e => setDescription(e.target.value)}
+          />
+          <select
+            name="priority"
+            onChange={e => setPriority(e.target.value)}
+          >
             {priorities.map((priority, j) => {
               return (
                 <option key={j} value={priority.value}>
@@ -42,20 +72,21 @@ export const ListItems = () => {
           </button>
         </form>
       </div>
-      {items && items.map((item, i) => {
-        let priority = priorities.find(priority => {
-          if (priority.value === item.priority)
-            return priority.label;
-        });
-        return (
-          <Item
-            key={i}
-            description={item.description}
-            priority={priority.label}
-            complete={item.is_complete}
-          />
-        );
-      })}
+      {items &&
+        items.map((item, i) => {
+          let priority = priorities.find(priority => {
+            if (priority.value === item.priority)
+              return priority.label;
+          });
+          return (
+            <Item
+              key={i}
+              description={item.description}
+              priority={priority.label}
+              complete={item.is_complete}
+            />
+          );
+        })}
     </div>
   );
 };
