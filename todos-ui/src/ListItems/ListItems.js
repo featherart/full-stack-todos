@@ -10,33 +10,6 @@ const priorities = [
   { value: 3, label: 'low' }
 ];
 
-const items = [
-  {
-    description: 'build electron app',
-    priority: 1,
-    is_complete: false
-  },
-  {
-    description: 'do a funky dance',
-    priority: 2,
-    is_complete: false
-  },
-  {
-    description: 'learn elixir',
-    priority: 1,
-    is_complete: false
-  },
-  {
-    description: 'take out compost',
-    priority: 3,
-    is_complete: false
-  }
-];
-
-const sortedItems = items.sort(
-  (a, b) => a.priority - b.priority
-);
-
 export const ListItems = () => {
   const [ items, setItems ] = useState([]);
 
@@ -44,12 +17,11 @@ export const ListItems = () => {
     const fetchItems = async () => {
       const res = await fetch(FETCH_ITEMS);
       const json = await res.json();
-      setItems(json);
+      setItems(json.data);
     };
     fetchItems();
   }, []);
 
-  console.log('items', items);
   return (
     <div className="list-items-container">
       <div className="title">Todos</div>
@@ -70,7 +42,7 @@ export const ListItems = () => {
           </button>
         </form>
       </div>
-      {sortedItems.map((item, i) => {
+      {items && items.map((item, i) => {
         let priority = priorities.find(priority => {
           if (priority.value === item.priority)
             return priority.label;
