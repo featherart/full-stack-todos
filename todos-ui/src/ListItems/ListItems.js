@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Item } from '../Item';
-import { Plus } from 'react-feather';
 import { FETCH_ITEMS } from '../api';
+import { AddItemForm } from '../AddItemForm';
 import './list-items.css';
 
 const priorities = [
@@ -13,7 +13,7 @@ const priorities = [
 export const ListItems = () => {
   const [ items, setItems ] = useState([]);
   const [ description, setDescription ] = useState('');
-  const [ priority, setPriority ] = useState('');
+  const [ priority, setPriority ] = useState(3);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -47,30 +47,13 @@ export const ListItems = () => {
     <div className="list-items-container">
       <div className="title">Todos</div>
       <div className="form">
-        <form onSubmit={e => handleSubmit(e)}>
-          <input
-            autoFocus
-            type="text"
-            placeholder="description"
-            name="description"
-            onChange={e => setDescription(e.target.value)}
-          />
-          <select
-            name="priority"
-            onChange={e => setPriority(e.target.value)}
-          >
-            {priorities.map((priority, j) => {
-              return (
-                <option key={j} value={priority.value}>
-                  {priority.label}
-                </option>
-              );
-            })}
-          </select>
-          <button className="submit-button" type="submit">
-            <Plus className="plus-icon" />
-          </button>
-        </form>
+        <AddItemForm
+          setPriority={setPriority}
+          priorities={priorities}
+          setDescription={setDescription}
+          description={description}
+          handleSubmit={handleSubmit}
+        />
       </div>
       {items &&
         items.map((item, i) => {
