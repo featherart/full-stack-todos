@@ -43,6 +43,15 @@ export const ListItems = () => {
       .catch(error => console.error(error));
   };
 
+  const handleDelete = id => {
+    fetch(`${FETCH_ITEMS}/${id}`, { method: 'DELETE'})
+    .then(res => {
+      const newItems = items.filter(item => item.id != id)
+      setItems([...newItems])
+    })
+    .catch(error => console.error(error));
+  }
+
   return (
     <div className="list-items-container">
       <div className="title">Todos</div>
@@ -61,12 +70,15 @@ export const ListItems = () => {
             if (priority.value === item.priority)
               return priority.label;
           });
+          const { id, description, is_complete} = item
           return (
             <Item
               key={i}
-              description={item.description}
+              id={id}
+              description={description}
               priority={priority.label}
-              complete={item.is_complete}
+              complete={is_complete}
+              handleDelete={handleDelete}
             />
           );
         })}
