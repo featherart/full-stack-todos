@@ -13,19 +13,21 @@ const priorities = [
 export const ListItems = () => {
   const [ items, setItems ] = useState([]);
   const [ description, setDescription ] = useState('');
-  const [ priority, setPriority ] = useState(3);
+  let [ priority, setPriority ] = useState('');
 
   useEffect(() => {
     const fetchItems = async () => {
       const res = await fetch(FETCH_ITEMS);
       const json = await res.json();
-      setItems(json.data);
+      const { data } = json
+      setItems([...data].sort((a, b) => a.priority - b.priority));
     };
     fetchItems();
   }, []);
 
   const handleSubmit = e => {
     e.preventDefault();
+    if (!priority) priority = 1
     const data = {
       item: { description, priority, is_complete: false }
     };
@@ -38,30 +40,53 @@ export const ListItems = () => {
       .then(res => res.json())
       .then(json => {
         setDescription('');
-        return setItems([ ...items, json.data ]);
+        return setItems([ json.data, ...items ].sort((a, b) => a.priority - b.priority));
       })
       .catch(error => console.error(error));
   };
 
   const handleDelete = id => {
-    fetch(`${FETCH_ITEMS}/${id}`, { method: 'DELETE'})
-    .then(res => {
-      const newItems = items.filter(item => item.id != id)
-      setItems([...newItems])
+    fetch(`${FETCH_ITEMS}/${id}`, { method: 'DELETE' })
+      .then(res => {
+        const newItems = items.filter(
+          item => item.id !== id
+        );
+        setItems([ ...newItems ].sort((a, b) => a.priority - b.priority));
+      })
+      .catch(error => console.error(error));
+  };
+
+  const toggleComplete = (id, complete) => {
+    const data = {item: { is_complete: !complete }};
+    fetch(`${FETCH_ITEMS}/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' }
     })
-    .catch(error => console.error(error));
-  }
+      .then(res => res.json())
+      .then(json => {
+        const updatedItem = items.find(item => {
+          if (item.id === id) {
+            item.is_complete = !complete
+            return item
+          }
+        })
+        const lessItems = items.filter(item => item.id !== id)
+        setItems([...lessItems, updatedItem].sort((a, b) => a.is_complete - b.is_complete))
+      })
+      .catch(error => console.error(error));
+  };
 
   return (
     <div className="list-items-container">
       <div className="title">Todos</div>
       <div className="form">
         <AddItemForm
-          setPriority={setPriority}
-          priorities={priorities}
-          setDescription={setDescription}
           description={description}
           handleSubmit={handleSubmit}
+          priorities={priorities}
+          setPriority={setPriority}
+          setDescription={setDescription}
         />
       </div>
       {items &&
@@ -70,15 +95,16 @@ export const ListItems = () => {
             if (priority.value === item.priority)
               return priority.label;
           });
-          const { id, description, is_complete} = item
+          const { id, description, is_complete } = item;
           return (
             <Item
-              key={i}
-              id={id}
-              description={description}
-              priority={priority.label}
               complete={is_complete}
+              description={description}
               handleDelete={handleDelete}
+              id={id}
+              key={i}
+              priority={priority.label}
+              toggleComplete={toggleComplete}
             />
           );
         })}

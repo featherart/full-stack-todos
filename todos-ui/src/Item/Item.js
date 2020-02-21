@@ -3,18 +3,19 @@ import { Circle, CheckCircle, Trash } from 'react-feather';
 import './item.css';
 
 export const Item = ({
-  description,
-  priority,
   complete,
+  description,
   id,
-  handleDelete
+  handleDelete,
+  priority,
+  toggleComplete
 }) => {
   return (
     <div className={`item-row ${priority}`}>
       {complete ? (
-        <CheckCircle className="action-icon" />
+        <CheckCircle className="action-icon" onClick={() => toggleComplete(id, complete)} />
       ) : (
-        <Circle className="action-icon" />
+        <Circle className="action-icon" onClick={() => toggleComplete(id, complete)} />
       )}
       <span className={`item-container ${priority}`}>
         {description}

@@ -7,11 +7,11 @@ export const AddItemForm = ({ setPriority, priorities, setDescription, descripti
     <form onSubmit={e => handleSubmit(e)}>
       <input
         autoFocus
-        type="text"
-        placeholder="description"
         name="description"
-        value={description}
+        placeholder="description"
         onChange={e => setDescription(e.target.value)}
+        type="text"
+        value={description}
       />
       <select
         name="priority"
