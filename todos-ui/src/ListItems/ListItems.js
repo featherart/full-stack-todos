@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Item } from '../Item';
-import { Plus } from 'react-feather';
 import { FETCH_ITEMS } from '../api';
+import { AddItemForm } from '../AddItemForm';
 import './list-items.css';
 
 const priorities = [
@@ -13,19 +13,21 @@ const priorities = [
 export const ListItems = () => {
   const [ items, setItems ] = useState([]);
   const [ description, setDescription ] = useState('');
-  const [ priority, setPriority ] = useState('');
+  let [ priority, setPriority ] = useState('');
 
   useEffect(() => {
     const fetchItems = async () => {
       const res = await fetch(FETCH_ITEMS);
       const json = await res.json();
-      setItems(json.data);
+      const { data } = json
+      setItems([...data].sort((a, b) => a.priority - b.priority));
     };
     fetchItems();
   }, []);
 
   const handleSubmit = e => {
     e.preventDefault();
+    if (!priority) priority = 1
     const data = {
       item: { description, priority, is_complete: false }
     };
@@ -38,7 +40,39 @@ export const ListItems = () => {
       .then(res => res.json())
       .then(json => {
         setDescription('');
-        return setItems([ ...items, json.data ]);
+        return setItems([ json.data, ...items ].sort((a, b) => a.priority - b.priority));
+      })
+      .catch(error => console.error(error));
+  };
+
+  const handleDelete = id => {
+    fetch(`${FETCH_ITEMS}/${id}`, { method: 'DELETE' })
+      .then(res => {
+        const newItems = items.filter(
+          item => item.id !== id
+        );
+        setItems([ ...newItems ].sort((a, b) => a.priority - b.priority));
+      })
+      .catch(error => console.error(error));
+  };
+
+  const toggleComplete = (id, complete) => {
+    const data = {item: { is_complete: !complete }};
+    fetch(`${FETCH_ITEMS}/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' }
+    })
+      .then(res => res.json())
+      .then(json => {
+        const updatedItem = items.find(item => {
+          if (item.id === id) {
+            item.is_complete = !complete
+            return item
+          }
+        })
+        const lessItems = items.filter(item => item.id !== id)
+        setItems([...lessItems, updatedItem].sort((a, b) => a.is_complete - b.is_complete))
       })
       .catch(error => console.error(error));
   };
@@ -47,30 +81,13 @@ export const ListItems = () => {
     <div className="list-items-container">
       <div className="title">Todos</div>
       <div className="form">
-        <form onSubmit={e => handleSubmit(e)}>
-          <input
-            autoFocus
-            type="text"
-            placeholder="description"
-            name="description"
-            onChange={e => setDescription(e.target.value)}
-          />
-          <select
-            name="priority"
-            onChange={e => setPriority(e.target.value)}
-          >
-            {priorities.map((priority, j) => {
-              return (
-                <option key={j} value={priority.value}>
-                  {priority.label}
-                </option>
-              );
-            })}
-          </select>
-          <button className="submit-button" type="submit">
-            <Plus className="plus-icon" />
-          </button>
-        </form>
+        <AddItemForm
+          description={description}
+          handleSubmit={handleSubmit}
+          priorities={priorities}
+          setPriority={setPriority}
+          setDescription={setDescription}
+        />
       </div>
       {items &&
         items.map((item, i) => {
@@ -78,12 +95,16 @@ export const ListItems = () => {
             if (priority.value === item.priority)
               return priority.label;
           });
+          const { id, description, is_complete } = item;
           return (
             <Item
+              complete={is_complete}
+              description={description}
+              handleDelete={handleDelete}
+              id={id}
               key={i}
-              description={item.description}
               priority={priority.label}
-              complete={item.is_complete}
+              toggleComplete={toggleComplete}
             />
           );
         })}
