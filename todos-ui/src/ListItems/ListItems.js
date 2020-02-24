@@ -19,15 +19,17 @@ export const ListItems = () => {
     const fetchItems = async () => {
       const res = await fetch(FETCH_ITEMS);
       const json = await res.json();
-      const { data } = json
-      setItems([...data].sort((a, b) => a.priority - b.priority));
+      const { data } = json;
+      setItems(
+        [ ...data ].sort((a, b) => a.priority - b.priority)
+      );
     };
     fetchItems();
   }, []);
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (!priority) priority = 1
+    if (!priority) priority = 1;
     const data = {
       item: { description, priority, is_complete: false }
     };
@@ -51,13 +53,13 @@ export const ListItems = () => {
         const newItems = items.filter(
           item => item.id !== id
         );
-        setItems([ ...newItems ].sort((a, b) => a.priority - b.priority));
+        setItems([ ...newItems ]);
       })
       .catch(error => console.error(error));
   };
 
   const toggleComplete = (id, complete) => {
-    const data = {item: { is_complete: !complete }};
+    const data = { item: { is_complete: !complete } };
     fetch(`${FETCH_ITEMS}/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
@@ -65,14 +67,12 @@ export const ListItems = () => {
     })
       .then(res => res.json())
       .then(json => {
-        const updatedItem = items.find(item => {
+        items.forEach((item, i) => {
           if (item.id === id) {
             item.is_complete = !complete
-            return item
+            setItems([ ...items ]);
           }
-        })
-        const lessItems = items.filter(item => item.id !== id)
-        setItems([...lessItems, updatedItem].sort((a, b) => a.is_complete - b.is_complete))
+        });
       })
       .catch(error => console.error(error));
   };
