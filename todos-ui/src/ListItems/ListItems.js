@@ -70,9 +70,7 @@ export const ListItems = () => {
         items.forEach((item, i) => {
           if (item.id === id) {
             item.is_complete = !complete
-            const begin = items.slice(0, i);
-            const end = items.slice(i, items.length);
-            setItems([ ...begin, ...end ]);
+            setItems([ ...items ]);
           }
         });
       })
