@@ -19,7 +19,8 @@ export const ListItems = () => {
     const fetchItems = async () => {
       const res = await fetch(FETCH_ITEMS);
       const json = await res.json();
-      const { data } = json;
+  
+      const { data } = json;    
       setItems(
         [ ...data ].sort((a, b) => a.priority - b.priority)
       );
