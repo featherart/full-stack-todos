@@ -2,7 +2,13 @@ import React from 'react';
 import { Plus } from 'react-feather';
 import './add-item-form.css';
 
-export const AddItemForm = ({ setPriority, priorities, setDescription, description, handleSubmit }) => {
+export const AddItemForm = ({
+  setPriority,
+  priorities,
+  setDescription,
+  description,
+  handleSubmit
+}) => {
   return (
     <form onSubmit={e => handleSubmit(e)}>
       <input
@@ -15,8 +21,12 @@ export const AddItemForm = ({ setPriority, priorities, setDescription, descripti
       />
       <select
         name="priority"
+        data-testid="priority"
         onChange={e => setPriority(e.target.value)}
       >
+        <option value="" hidden>
+          priority
+        </option>
         {priorities.map((priority, j) => {
           return (
             <option key={j} value={priority.value}>
@@ -25,7 +35,11 @@ export const AddItemForm = ({ setPriority, priorities, setDescription, descripti
           );
         })}
       </select>
-      <button className="submit-button" type="submit">
+      <button
+        className="submit-button"
+        type="submit"
+        data-testid="submit-button"
+      >
         <Plus className="plus-icon" />
       </button>
     </form>

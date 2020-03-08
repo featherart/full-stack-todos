@@ -13,9 +13,9 @@ export const Item = ({
   return (
     <div className={`item-row ${priority}`}>
       {complete ? (
-        <CheckCircle className="action-icon" onClick={() => toggleComplete(id, complete)} />
+        <CheckCircle className="action-icon" onClick={() => toggleComplete(id, complete)} data-testid='checked-icon' />
       ) : (
-        <Circle className="action-icon" onClick={() => toggleComplete(id, complete)} />
+        <Circle className="action-icon" onClick={() => toggleComplete(id, complete)} data-testid='circle-icon' />
       )}
       <span className={`item-container ${priority}`}>
         {description}
@@ -23,6 +23,7 @@ export const Item = ({
       <Trash
         className="action-icon"
         onClick={() => handleDelete(id)}
+        data-testid='trash-icon'
       />
     </div>
   );

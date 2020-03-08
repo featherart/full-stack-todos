@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Item } from '../Item';
 import { FETCH_ITEMS } from '../api';
 import { AddItemForm } from '../AddItemForm';
+import { Loading } from '../Loading';
+import { EmptyList } from '../EmptyList';
 import './list-items.css';
 
 const priorities = [
@@ -12,6 +14,7 @@ const priorities = [
 
 export const ListItems = () => {
   const [ items, setItems ] = useState([]);
+  const [ loading, setLoading ] = useState(true);
   const [ description, setDescription ] = useState('');
   let [ priority, setPriority ] = useState('');
 
@@ -19,16 +22,19 @@ export const ListItems = () => {
     const fetchItems = async () => {
       const res = await fetch(FETCH_ITEMS);
       const json = await res.json();
+
       const { data } = json;
       setItems(
         [ ...data ].sort((a, b) => a.priority - b.priority)
       );
+      setLoading(false);
     };
     fetchItems();
   }, []);
 
   const handleSubmit = e => {
     e.preventDefault();
+    setLoading(true);
     if (!priority) priority = 1;
     const data = {
       item: { description, priority, is_complete: false }
@@ -42,7 +48,12 @@ export const ListItems = () => {
       .then(res => res.json())
       .then(json => {
         setDescription('');
-        return setItems([ json.data, ...items ].sort((a, b) => a.priority - b.priority));
+        setLoading(false);
+        return setItems(
+          [ json.data, ...items ].sort(
+            (a, b) => a.priority - b.priority
+          )
+        );
       })
       .catch(error => console.error(error));
   };
@@ -69,7 +80,7 @@ export const ListItems = () => {
       .then(json => {
         items.forEach((item, i) => {
           if (item.id === id) {
-            item.is_complete = !complete
+            item.is_complete = !complete;
             setItems([ ...items ]);
           }
         });
@@ -89,6 +100,8 @@ export const ListItems = () => {
           setDescription={setDescription}
         />
       </div>
+      {(items && items.length === 0) && <EmptyList />}
+      {loading && <Loading />}
       {items &&
         items.map((item, i) => {
           let priority = priorities.find(priority => {
